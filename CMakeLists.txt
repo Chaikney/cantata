@@ -1,6 +1,11 @@
-cmake_minimum_required(VERSION 3.0)
+# NOTE Max policy set on basis of "works on my machine"
+# and MIN by not wanting to prematurely deprecate other versions.
+cmake_minimum_required(VERSION 3.0...3.30.5)
+# NOTE This is required by the exec_program called in FindTagLib.cmake
 project(cantata)
 cmake_policy(SET CMP0020 NEW)
+# TODO Remove this when I know how to alter FindTagLib.cmake to use execute_process()
+cmake_policy(SET CMP0153 OLD)
 
 #  NOTE: If PROJECT_URL, or PROJECT_REV_URL, are changed, then cantata-dynamic, README, and
 #        dbus/mpd.cantata.xml will need renaming/updating.
