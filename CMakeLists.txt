@@ -7,6 +7,9 @@ cmake_policy(SET CMP0020 NEW)
 # TODO Remove this when I know how to alter FindTagLib.cmake to use execute_process()
 cmake_policy(SET CMP0153 OLD)
 
+# NOTE As advised by qt porting guide
+add_compile_definitions(QT_DISABLE_DEPRECATED_UP_TO=0x050F00)
+
 #  NOTE: If PROJECT_URL, or PROJECT_REV_URL, are changed, then cantata-dynamic, README, and
 #        dbus/mpd.cantata.xml will need renaming/updating.
 set(PROJECT_URL "cantata.mpd")
@@ -28,7 +31,7 @@ endif ()
 
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-set (QT_MIN_VERSION 5.11)
+set (QT_MIN_VERSION 5.15)
 
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
 set(CPACK_GENERATOR "DEB;RPM;TBZ2")
@@ -39,7 +42,7 @@ set(CPACK_PACKAGE_VERSION_MINOR "5")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 set(CPACK_PACKAGE_VERSION_SPIN "")  # Use ".$number" - e.g. ".1"
-set(CPACK_PACKAGE_CONTACT "Craig Drummond <craig.p.drummond@gmail.com>")
+set(CPACK_PACKAGE_CONTACT "Chris H, no email given")
 set(CANTATA_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}")
 set(CANTATA_VERSION_FULL "${CANTATA_VERSION}.${CPACK_PACKAGE_VERSION_PATCH}")
 set(CANTATA_VERSION_WITH_SPIN "${CANTATA_VERSION_FULL}${CPACK_PACKAGE_VERSION_SPIN}")
