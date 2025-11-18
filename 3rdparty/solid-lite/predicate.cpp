@@ -209,6 +209,7 @@ bool Solid::Predicate::matches(const Device &device) const
             QVariant value = metaProp.isReadable() ? metaProp.read(iface) : QVariant();
             QVariant expected = d->value;
 
+            // FIXME Deprecation warning on compilation, may cascade
             if (metaProp.isEnumType() && expected.type()==QVariant::String) {
                 QMetaEnum metaEnum = metaProp.enumerator();
                 int value = metaEnum.keysToValue(d->value.toString().toLatin1());
