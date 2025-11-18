@@ -1,3 +1,5 @@
+# "Qt requires a c++17 compiler"
+set(CMAKE_CXX_STANDARD 17)
 set(SUPPORT_CORE_SRCS utils.cpp thread.cpp)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${QTINCLUDES})

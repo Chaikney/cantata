@@ -27,12 +27,14 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QProcess>
-#include <QApplication>
+#include <QGuiApplication>
 #include <QDateTime>
 #include <QTime>
 #include <QWidget>
 #include <QStyle>
-#include <QDesktopWidget>
+// FIXME This no longer exists
+// #include <QDesktopWidget>
+#include <QScreen>
 #include <QEventLoop>
 #include <QStandardPaths>
 #include <QSystemTrayIcon>
@@ -743,13 +745,13 @@ QString Utils::dataDir(const QString &sub, bool create)
 {
     #if defined Q_OS_WIN || defined Q_OS_MAC
 
-    return userDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation)+constDirSep, sub, create);
+    return userDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+constDirSep, sub, create);
 
     #else
 
     static QString location;
     if (location.isEmpty()) {
-        location=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+        location=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
         if (QCoreApplication::organizationName()==QCoreApplication::applicationName()) {
             location=location.replace(QCoreApplication::organizationName()+Utils::constDirSep+QCoreApplication::applicationName(),
                                       QCoreApplication::applicationName());
@@ -894,10 +896,16 @@ QFont Utils::smallFont(QFont f)
     return f;
 }
 
+// FIXME Class QGuiApplicartion has no 'style'
+// ...What does this function want to do? It is used a lot.
 int Utils::layoutSpacing(QWidget *w)
 {
-    int spacing=(w ? w->style() : qApp->style())->layoutSpacing(QSizePolicy::DefaultType, QSizePolicy::DefaultType, Qt::Vertical);
-    if (spacing<0) {
+    //int spacing=(w ? w->style() : qApp->style())->layoutSpacing(QSizePolicy::DefaultType, QSizePolicy::DefaultType, Qt::Vertical);
+    int spacing;
+    if (w) {
+        spacing = w->style()->layoutSpacing(QSizePolicy::DefaultType,
+                                            QSizePolicy::DefaultType, Qt::Vertical); }
+    if (spacing < 0) {
         spacing=scaleForDpi(4);
     }
     return spacing;
@@ -907,15 +915,19 @@ double Utils::screenDpiScale()
 {
     static double scaleFactor=-1.0;
     if (scaleFactor<0) {
-        QWidget *dw=QApplication::desktop();
+        //QWidget *dw=QApplication::desktop();
+        QScreen *dw=QGuiApplication::primaryScreen();
         if (!dw) {
             return 1.0;
         }
-        scaleFactor=dw->logicalDpiX()>120 ? qMin(qMax(dw->logicalDpiX()/96.0, 1.0), 4.0) : 1.0;
+        scaleFactor=dw->logicalDotsPerInchX()>120 ?
+            qMin(qMax(dw->logicalDotsPerInchX()/96.0, 1.0), 4.0) : 1.0;
     }
     return scaleFactor;
 }
 
+// Returns true if the available desktop size is 800 or less
+// Or if the NETBOOK env var is set
 bool Utils::limitedHeight(QWidget *w)
 {
     static bool init=false;
@@ -923,9 +935,11 @@ bool Utils::limitedHeight(QWidget *w)
     if (!init) {
         limited=!qgetenv("CANTATA_NETBOOK").isEmpty();
         if (!limited) {
-            QDesktopWidget *dw=QApplication::desktop();
+            //QDesktopWidget *dw=QApplication::desktop();
+            QScreen	*dw=QGuiApplication::primaryScreen();
             if (dw) {
-                limited=dw->availableGeometry(w).size().height()<=800;
+                //limited=dw->availableGeometry(w).size().height()<=800;
+                limited=dw->availableGeometry().size().height()<=800;
             }
         }
     }
@@ -937,7 +951,8 @@ void Utils::resizeWindow(QWidget *w, bool preserveWidth, bool preserveHeight)
     QWidget *window=w ? w->window() : nullptr;
     if (window) {
         QSize was=window->size();
-        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        //QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        QGuiApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         window->setMinimumSize(QSize(0, 0));
         window->adjustSize();
         QSize now=window->size();
@@ -1020,7 +1035,7 @@ QColor Utils::clampColor(const QColor &col)
 
 QColor Utils::monoIconColor()
 {
-    return clampColor(QApplication::palette().color(QPalette::Active, QPalette::WindowText));
+    return clampColor(QGuiApplication::palette().color(QPalette::Active, QPalette::WindowText));
 }
 
 QSize Utils::minSize(const QSize& fst, const QSize& snd) {
@@ -1056,7 +1071,8 @@ void Utils::raiseWindow(QWidget *w)
     QString wmctrl=Utils::findExe(QLatin1String("wmctrl"));
     if (!wmctrl.isEmpty()) {
         if (wasHidden) {
-            QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+            QGuiApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+            //QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         }
         QProcess::execute(wmctrl, QStringList() << QLatin1String("-i") << QLatin1String("-a") << QString::number(w->effectiveWinId()));
     }
