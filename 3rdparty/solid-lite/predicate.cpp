@@ -206,10 +206,15 @@ bool Solid::Predicate::matches(const Device &device) const
         {
             const int index = iface->metaObject()->indexOfProperty(d->property.toLatin1());
             QMetaProperty metaProp = iface->metaObject()->property(index);
+            // FIXME Operands have different types - .read returns QVariant
+            // ....implies I need another way to compare this
+            // Intention is value is the QVariant from the DeviceInterace above
+            // That value is then used to compare against something.
             QVariant value = metaProp.isReadable() ? metaProp.read(iface) : QVariant();
             QVariant expected = d->value;
 
             // FIXME Deprecation warning on compilation, may cascade
+            //if (metaProp.isEnumType() && expected.type()==QVariant::String) {
             if (metaProp.isEnumType() && expected.type()==QVariant::String) {
                 QMetaEnum metaEnum = metaProp.enumerator();
                 int value = metaEnum.keysToValue(d->value.toString().toLatin1());
