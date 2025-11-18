@@ -896,8 +896,9 @@ QFont Utils::smallFont(QFont f)
     return f;
 }
 
-// FIXME Class QGuiApplicartion has no 'style'
+// FIXED Class QGuiApplication has no 'style'
 // ...What does this function want to do? It is used a lot.
+// NOTE This will return weird if there's no widget, but why would that happen?
 int Utils::layoutSpacing(QWidget *w)
 {
     //int spacing=(w ? w->style() : qApp->style())->layoutSpacing(QSizePolicy::DefaultType, QSizePolicy::DefaultType, Qt::Vertical);
