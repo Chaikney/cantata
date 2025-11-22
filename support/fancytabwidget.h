@@ -78,7 +78,8 @@ public:
 
 protected:
 // FIXME error: ‘void FancyTab::enterEvent(QEvent*)’ marked ‘override’, but does not override
-    void enterEvent(QEvent *) override;
+    //void enterEvent(QEvent *) override;
+    void enterEvent(QEvent *) ;	// HACK removed override keyword without knowing where it rolls to
     void leaveEvent(QEvent *) override;
 
 private:
