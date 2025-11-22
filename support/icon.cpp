@@ -62,6 +62,8 @@ int Icon::dlgIconSize()
         box->ensurePolished();
         QPixmap pix=box->iconPixmap();
         if (pix.isNull() || pix.width()<16) {
+// TODO ‘static QFontMetrics QApplication::fontMetrics()’ is deprecated:
+// Use QFontMetricsF(qApp->font()) instead. [-Wdeprecated-declarations]
             size=stdSize(QApplication::fontMetrics().height()*3.5);
         } else {
             size=pix.width();

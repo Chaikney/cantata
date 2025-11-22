@@ -77,6 +77,7 @@ public:
     bool underMouse;
 
 protected:
+// FIXME error: ‘void FancyTab::enterEvent(QEvent*)’ marked ‘override’, but does not override
     void enterEvent(QEvent *) override;
     void leaveEvent(QEvent *) override;
 

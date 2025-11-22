@@ -493,18 +493,25 @@ FancyTabWidget::FancyTabWidget(QWidget *parent)
     , proxyStyle(new FancyTabProxyStyle)
 {
     sideLayout->setSpacing(0);
-    sideLayout->setMargin(0);
+// FIXED error: ‘class QVBoxLayout’ has no member named ‘setMargin’
+// NOTE https://stackoverflow.com/a/60416538
+// existed in initial versions of Qt5 but is currently deprecated,
+// instead you must use the setContentsMargins() method:
+    //sideLayout->setMargin(0);
+    sideLayout->setContentsMargins(0, 0, 0, 0);
     sideLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
 
     sideWidget->setLayout(sideLayout);
     sideWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
-    topLayout->setMargin(0);
+// FIXED error: ‘class QVBoxLayout’ has no member named ‘setMargin’
+    topLayout->setContentsMargins(0, 0, 0, 0);
     topLayout->setSpacing(0);
     topLayout->addWidget(stack_);
 
     QHBoxLayout *mainLayout = new QHBoxLayout;
-    mainLayout->setMargin(0);
+// FIXED error: ‘class QVBoxLayout’ has no member named ‘setMargin’
+    mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(0);
     mainLayout->addWidget(sideWidget);
     mainLayout->addLayout(topLayout);
