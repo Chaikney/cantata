@@ -3,6 +3,10 @@ Cantata
 
 **NOTE** This is an education-only fork of one of the programs I (Chaikney) use the most. Do not try and use any of the code I add here! Everything after this is from CDrummond's notes. If you found the project useful, the Paypal link below still seems to work.
 
+**NOTE** **Development is taking place in the "qt6_port" branch.**
+
+## Everything below this is the previous README and may be outdated
+
 
 **NOTE** After 10 years, development of Cantata has now ceased, and this repository is read-only. v2.5.0 is the last released version.
 
