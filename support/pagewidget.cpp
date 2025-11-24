@@ -65,6 +65,7 @@ public:
         , underMouse(false)
     {
         if (!standard) {
+// TODO ‘static QFontMetrics QApplication::fontMetrics()’ is deprecated: Use QFontMetricsF(qApp->font()) instead. [-Wdeprecated-declarations]
             int height=QApplication::fontMetrics().height();
             iconSize=height>22 ? Icon::stdSize(height*2.5) : 32;
         }
@@ -284,6 +285,7 @@ PageWidgetItem::PageWidgetItem(QWidget *p, const QString &header, const QIcon &i
         static int iconSize=-1;
 
         if (-1==iconSize) {
+// TODO ‘static QFontMetrics QApplication::fontMetrics()’ is deprecated: Use QFontMetricsF(qApp->font()) instead. [-Wdeprecated-declarations]
             iconSize=QApplication::fontMetrics().height();
             if (iconSize>20) {
                 iconSize=Icon::stdSize(iconSize*1.25);
@@ -299,7 +301,7 @@ PageWidgetItem::PageWidgetItem(QWidget *p, const QString &header, const QIcon &i
         layout->addItem(new QSpacerItem(8, 8, QSizePolicy::Fixed, QSizePolicy::Fixed));
     }
     layout->addWidget(cfg);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     cfg->setParent(this);
     adjustSize();
 }
@@ -315,7 +317,7 @@ PageWidget::PageWidget(QWidget *p, bool listView, bool headers)
     connect(stack, SIGNAL(currentChanged(int)), this, SIGNAL(currentPageChanged()));
     layout->addWidget(list);
     layout->addWidget(stack);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     list->setViewMode(QListView::ListMode);
     list->setVerticalScrollMode(QListView::ScrollPerPixel);
     list->setMovement(QListView::Static);

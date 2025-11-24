@@ -22,9 +22,10 @@
  */
 
 #ifndef COMBOBOX_H
-#define COMBOBOX_H
+# define COMBOBOX_H
 
 #include <QComboBox>
+#include <QScreen>
 
 class ComboBox : public QComboBox
 {

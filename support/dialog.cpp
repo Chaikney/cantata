@@ -411,8 +411,13 @@ void Dialog::showEvent(QShowEvent *e)
                 mwSize=mw->minimumSizeHint();
             }
             if (mwSize.width()>15 && mwSize.height()>15) {
-                setMinimumHeight(qMax(minimumHeight(), buttonBox->height()+layout()->spacing()+mwSize.height()+(2*layout()->margin())));
-                setMinimumWidth(qMax(minimumWidth(), mwSize.width()+(2*layout()->margin())));
+                int	contMargin;
+                layout()->getContentsMargins(&contMargin, 0, 0, 0);
+// FIXED ‘class QLayout’ has no member named ‘margin’ replaced by getContentsMargins that uses 4 int pointers
+                setMinimumHeight(qMax(minimumHeight(),
+                                      layout()->spacing()+mwSize.height()+ (2 * contMargin)));
+// FIXED ‘class QLayout’ has no member named ‘margin’
+                setMinimumWidth(qMax(minimumWidth(), mwSize.width() + (2 * contMargin)));
             }
         }
     }

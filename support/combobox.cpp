@@ -25,7 +25,8 @@
 #include "lineedit.h"
 #include "utils.h"
 #include <QAbstractItemView>
-#include <QDesktopWidget>
+//#include <QDesktopWidget>
+#include <QWidget>
 #include <QApplication>
 #include <QStyleOptionComboBox>
 
@@ -38,8 +39,13 @@ ComboBox::ComboBox(QWidget *p)
 {
     #if !defined Q_OS_WIN && !defined Q_OS_MAC
     if (-1==maxPopupItemCount) {
-        if (QApplication::desktop()) {
-            maxPopupItemCount=((QApplication::desktop()->height()/(QApplication::fontMetrics().height()*1.5))*0.75)+0.5;
+        // FIXED ‘desktop’ is not a member of ‘QApplication’
+        // THis is trying to decide a max number of items to show...
+        // Need: desktop dimensions (height) and font height
+// TODO ‘static QFontMetrics QApplication::fontMetrics()’ is deprecated: Use QFontMetricsF(qApp->font()) instead. [-Wdeprecated-declarations]
+        if (QGuiApplication::primaryScreen()) {
+            maxPopupItemCount=((QGuiApplication::primaryScreen()->availableSize().height()/
+                                (QApplication::fontMetrics().height()*1.5))*0.75)+0.5;
         } else {
             maxPopupItemCount=32;
         }
