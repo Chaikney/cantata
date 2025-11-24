@@ -27,10 +27,11 @@
 #include <QMap>
 #include <QObject>
 #include <QString>
+#include <QWidget>
 
 class Action;
 class QAction;
-class QWidget;
+// class QWidget;
 class QIcon;
 
 class ActionCollection : public QObject {
