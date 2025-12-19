@@ -98,7 +98,8 @@ void HttpStream::setVolume(int vol)
         #ifdef LIBVLC_FOUND
         libvlc_audio_set_volume(player, vol);
         #else
-        player->setVolume(vol);
+// FIXED ‘class QMediaPlayer’ has no member named ‘setVolume’
+        player->audioOutput()->setVolume(vol);
         #endif
         emit update();
     }
@@ -115,7 +116,8 @@ int HttpStream::volume()
         #ifdef LIBVLC_FOUND
         vol = libvlc_audio_get_volume(player);
         #else
-        vol = player->volume();
+// FIXED ‘class QMediaPlayer’ has no member named ‘volume’
+        vol = player->audioOutput()->volume();
         #endif
         if (vol < 0) {
             vol = currentVolume;
@@ -135,15 +137,20 @@ void HttpStream::toggleMute()
         #ifdef LIBVLC_FOUND
         libvlc_audio_set_mute(player, muted);
         #else
-        player->setMuted(!muted);
+// FIXED ‘class QMediaPlayer’ has no member named ‘setMuted’
+// NOTE This method exists in QAudioInput (or output? which is this?) now, which should be connected somehow...
+        player->audioOutput()->setMuted(!muted);
         #endif
         emit update();
     }
 }
 
+// We get a string representing a URL. And...
 void HttpStream::streamUrl(const QString &url)
 {
     DBUG << url;
+    // NOTE Is this just to clear an existing stream? Initialise the new one?
+    // If the existing player is different from the passed URL, clear the player.
     #ifdef LIBVLC_FOUND
     if (player) {
         libvlc_media_player_stop(player);
@@ -153,15 +160,21 @@ void HttpStream::streamUrl(const QString &url)
     }
     #else
     if (player) {
-        QMediaContent media = player->media();
-        if (media != nullptr && media.request().url() != url) {
+        // FIXED? QMediaContent has been removed, replace with QUrl
+        // ... but what is the purpose here? QUrl methods dont relate much
+        // QMediaContent media = player->media();
+        QUrl media = player->source();
+        //if (media != nullptr && media.request().url() != url) {
+        if ((!media.isEmpty()) && media.toString() != url) {
             player->stop();
             player->deleteLater();
             player = nullptr;
         }
     }
     #endif
+    // we make a QUrl from the given string.
     QUrl qUrl(url);
+    // if the QUrl is good and we don't have an existing player (i.e. we just scrubbed it)
     if (!url.isEmpty() && qUrl.isValid() && qUrl.scheme().startsWith("http") && !player) {
         #ifdef LIBVLC_FOUND
         instance = libvlc_new(0, NULL);
@@ -171,8 +184,16 @@ void HttpStream::streamUrl(const QString &url)
         libvlc_media_release(media);
         #else
         player = new QMediaPlayer(this);
-        player->setMedia(qUrl);
-        connect(player, &QMediaPlayer::bufferStatusChanged, this, &HttpStream::bufferingProgress);
+        player->setSource(qUrl);
+// FIXED  ‘bufferStatusChanged’ is not a member of ‘QMediaPlayer’
+// this is a signals / slots thing: sender, signal, receiver, method, [implicit auto connection type]
+// ...player, buffering changed, tell this httpstream,
+// ...we need an equivalent signal to bufferStatusChanged, perhaps MediaStatus:
+// https://doc.qt.io/qt-6/qmediaplayer.html#MediaStatus-enum
+// ..but in fact bufferProgressChanged seems to fit better.
+// FIXED slot requires more arguments than the signal provides
+//        connect(player, &QMediaPlayer::bufferStatusChanged, this,
+        connect(player, &QMediaPlayer::bufferProgressChanged, this, &HttpStream::bufferingProgress);
         #endif
         muted = false;
         setVolume(Configuration(metaObject()->className()).get("volume", currentVolume));
@@ -187,6 +208,9 @@ void HttpStream::streamUrl(const QString &url)
 }
 
 #ifndef LIBVLC_FOUND
+// NOTE this is important for an issue relating to bufferstatuschanged signals
+// this is a SLOT so is triggered by some signal somewhere
+// I think this says, "if the buffer is 100% full then play the stream, else haud on a bit"
 void HttpStream::bufferingProgress(int progress)
 {
     MPDStatus * const status = MPDStatus::self();
@@ -214,7 +238,10 @@ void HttpStream::updateStatus()
     #ifdef LIBVLC_FOUND
     playerNeedsToStart = playerNeedsToStart && libvlc_media_player_get_state(player) != libvlc_Playing;
     #else
-    playerNeedsToStart = playerNeedsToStart && player->state() == QMediaPlayer::StoppedState;
+    // FIXED ‘class QMediaPlayer’ has no member named ‘state’
+    // also, this is a very unreadable line construction with assignment and comparison together
+    playerNeedsToStart = playerNeedsToStart &&
+        (player->playbackState() == QMediaPlayer::StoppedState);
     #endif
 
     if (status->state() == state && !playerNeedsToStart) {
@@ -230,8 +257,10 @@ void HttpStream::updateStatus()
             libvlc_media_player_play(player);
             startTimer();
             #else
-            QUrl url = player->media().request().url();
-            player->setMedia(url);
+// FIXED ‘class QMediaPlayer’ has no member named ‘media’; did you mean ‘NoMedia’?
+// FIXME but ..what are we doing here, this goes in a circle. get url to set  url?!
+            QUrl url = player->source();
+            player->setSource(url);
             #endif
         }
         break;

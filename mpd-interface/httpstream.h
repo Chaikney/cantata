@@ -22,18 +22,23 @@
  */
 
 #ifndef HTTP_STREAM_H
-#define HTTP_STREAM_H
+# define HTTP_STREAM_H
 
-#include <QObject>
+# include <QObject>
 
-#ifdef LIBVLC_FOUND
-#include <vlc/vlc.h>
-#else
-#include <QtMultimedia/QMediaPlayer>
-#endif
+# ifdef LIBVLC_FOUND
+#  include <vlc/vlc.h>
+# else
+#  include <QtMultimedia/QMediaPlayer>
+#  include <QtMultimedia/QAudioOutput>
+// FIXED? The class has been removed. Use QUrl for individual media files instead.
+// https://doc.qt.io/qt-6/qtmultimedia-changes-qt6.html
+// #  include <QtMultimedia/QMediaContent>
+# endif
 
 class QTimer;
 
+// TODO I need to have a clear idea whether this is for INPUT or OUTPUT or audio (or both!)
 class HttpStream : public QObject
 {
     Q_OBJECT
