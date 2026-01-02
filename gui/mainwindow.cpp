@@ -38,7 +38,7 @@
 #include "mpd-interface/mpdstats.h"
 #include "mpd-interface/mpdparseutils.h"
 #ifdef ENABLE_SIMPLE_MPD_SUPPORT
-#include "mpd-interface/mpduser.h"
+# include "mpd-interface/mpduser.h"
 #endif
 #include "settings.h"
 #include "support/utils.h"
@@ -54,49 +54,49 @@
 #include "support/gtkstyle.h"
 #include "widgets/mirrormenu.h"
 #ifdef ENABLE_DEVICES_SUPPORT
-#include "devices/filejob.h"
-#include "devices/devicespage.h"
-#include "models/devicesmodel.h"
-#include "devices/actiondialog.h"
-#include "devices/syncdialog.h"
-#if defined CDDB_FOUND || defined MUSICBRAINZ5_FOUND
-#include "devices/audiocddevice.h"
-#endif
+# include "devices/filejob.h"
+# include "devices/devicespage.h"
+# include "models/devicesmodel.h"
+# include "devices/actiondialog.h"
+# include "devices/syncdialog.h"
+# if defined CDDB_FOUND || defined MUSICBRAINZ5_FOUND
+#  include "devices/audiocddevice.h"
+# endif
 #endif
 #include "online/onlineservicespage.h"
 #include "http/httpserver.h"
 #ifdef TAGLIB_FOUND
-#include "tags/trackorganiser.h"
-#include "tags/tageditor.h"
-#include "tags/tags.h"
-#ifdef ENABLE_REPLAYGAIN_SUPPORT
-#include "replaygain/rgdialog.h"
-#endif
+# include "tags/trackorganiser.h"
+# include "tags/tageditor.h"
+# include "tags/tags.h"
+# ifdef ENABLE_REPLAYGAIN_SUPPORT
+#  include "replaygain/rgdialog.h"
+# endif
 #endif
 #include "models/streamsmodel.h"
 #include "playlists/playlistspage.h"
 #include "support/fancytabwidget.h"
 #include "support/monoicon.h"
 #ifdef QT_QTDBUS_FOUND
-#include "dbus/mpris.h"
-#include "cantataadaptor.h"
-#ifdef Q_OS_LINUX
-#include "dbus/powermanagement.h"
-#endif
+# include "dbus/mpris.h"
+# include "cantataadaptor.h"
+# ifdef Q_OS_LINUX
+#  include "dbus/powermanagement.h"
+# endif
 #endif
 #if !defined Q_OS_WIN && !defined Q_OS_MAC
-#include "devices/mountpoints.h"
+# include "devices/mountpoints.h"
 #endif
 #ifdef Q_OS_MAC
-#include "support/windowmanager.h"
-#include "support/osxstyle.h"
-#include "mac/dockmenu.h"
-#ifdef MAC_MEDIAPLAYER_FOUND
-#include "mac/macnowplaying.h"
-#endif
-#ifdef IOKIT_FOUND
-#include "mac/powermanagement.h"
-#endif
+# include "support/windowmanager.h"
+# include "support/osxstyle.h"
+# include "mac/dockmenu.h"
+# ifdef MAC_MEDIAPLAYER_FOUND
+#  include "mac/macnowplaying.h"
+# endif
+# ifdef IOKIT_FOUND
+#  include "mac/powermanagement.h"
+# endif
 #endif
 #include "playlists/dynamicplaylists.h"
 #include "support/messagewidget.h"
@@ -108,7 +108,7 @@
 #include "support/actioncollection.h"
 #include "stdactions.h"
 #ifdef ENABLE_HTTP_STREAM_PLAYBACK
-#include "mpd-interface/httpstream.h"
+# include "mpd-interface/httpstream.h"
 #endif
 #include <QSet>
 #include <QString>
@@ -116,7 +116,7 @@
 #include <QToolBar>
 #include <QProcess>
 #ifdef Q_OS_WIN
-#include "windows/thumbnailtoolbar.h"
+# include "windows/thumbnailtoolbar.h"
 #endif
 #include <QDialogButtonBox>
 #include <QKeyEvent>
@@ -127,7 +127,9 @@
 #include "mediakeys.h"
 #include <cstdlib>
 #include <algorithm>
+#include <QActionGroup>
 
+// NOTE What does this do? Next of what, what is it scrolling through?
 static int nextKey(int &key)
 {
     int k=key;
@@ -234,7 +236,8 @@ MainWindow::MainWindow(QWidget *parent)
         topToolBar->setContentsMargins(0, 0, 0, 0);
         QLayout *l=topToolBar->layout();
         if (l) {
-            l->setMargin(0);
+// FIXED  error: ‘class QLayout’ has no member named ‘setMargin’
+            l->setContentsMargins(0, 0, 0, 0);
             l->setSpacing(0);
         }
         topToolBar->ensurePolished();
@@ -314,7 +317,8 @@ MainWindow::MainWindow(QWidget *parent)
     addLocalFilesToPlayQueueAction = ActionCollection::get()->createAction("addlocalfiles", tr("Add Local Files"));
     QIcon clearIcon = MonoIcon::icon(FontAwesome::times, MonoIcon::constRed, MonoIcon::constRed);
     clearPlayQueueAction = ActionCollection::get()->createAction("clearplaylist", tr("Clear"), clearIcon);
-    clearPlayQueueAction->setShortcut(Qt::ControlModifier+Qt::Key_K);
+    // TODO warning: ‘constexpr QKeyCombination Qt::operator+(KeyboardModifier, Key)’ is deprecated: Use operator| instead [-Wdeprecated-declarations]
+    clearPlayQueueAction->setShortcut(Qt::ControlModifier | Qt::Key_K);
     centerPlayQueueAction = ActionCollection::get()->createAction("centerplaylist", tr("Center On Current Track"), Icons::self()->centrePlayQueueOnTrackIcon);
     expandInterfaceAction = ActionCollection::get()->createAction("expandinterface", tr("Expanded Interface"), MonoIcon::icon(FontAwesome::expand, iconCol));
     expandInterfaceAction->setCheckable(true);
@@ -331,7 +335,8 @@ MainWindow::MainWindow(QWidget *parent)
     consumePlayQueueAction = ActionCollection::get()->createAction("consumeplaylist", tr("Consume"), Icons::self()->consumeIcon, tr("When consume is activated, a song is removed from the play queue after it has been played."));
     searchPlayQueueAction = ActionCollection::get()->createAction("searchplaylist", tr("Find in Play Queue"), Icons::self()->searchIcon);
     addAction(searchPlayQueueAction);
-    searchPlayQueueAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_F);
+    //searchPlayQueueAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_F);
+    searchPlayQueueAction->setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_F);
     #ifdef ENABLE_HTTP_STREAM_PLAYBACK
     streamPlayAction = ActionCollection::get()->createAction("streamplay", tr("Play HTTP Output Stream"), Icons::self()->httpStreamIcon);
     streamPlayAction->setCheckable(true);
@@ -360,11 +365,12 @@ MainWindow::MainWindow(QWidget *parent)
     editPlayQueueTagsAction->setSettingsText(tr("Edit Track Information (Play Queue)"));
     #endif
     addAction(expandAllAction = ActionCollection::get()->createAction("expandall", tr("Expand All")));
-    expandAllAction->setShortcut(Qt::ControlModifier+Qt::Key_Down);
+    expandAllAction->setShortcut(Qt::ControlModifier | Qt::Key_Down);
     addAction(collapseAllAction = ActionCollection::get()->createAction("collapseall", tr("Collapse All")));
-    collapseAllAction->setShortcut(Qt::ControlModifier+Qt::Key_Up);
+    // TODO deprecated like other parts of this file
+    collapseAllAction->setShortcut(Qt::ControlModifier | Qt::Key_Up);
     cancelAction = ActionCollection::get()->createAction("cancel", tr("Cancel"), Icons::self()->cancelIcon);
-    cancelAction->setShortcut(Qt::AltModifier+Qt::Key_Escape);
+    cancelAction->setShortcut(Qt::AltModifier | Qt::Key_Escape);
     connect(cancelAction, SIGNAL(triggered()), messageWidget, SLOT(animatedHide()));
 
     StdActions::self()->playPauseTrackAction->setEnabled(false);
@@ -375,8 +381,10 @@ MainWindow::MainWindow(QWidget *parent)
     volumeSlider->initActions();
 
     connectionsAction->setMenu(new QMenu(this));
+    // FIXME error: invalid use of incomplete type ‘class QActionGroup’
     connectionsGroup=new QActionGroup(connectionsAction->menu());
     partitionsAction->setMenu(new QMenu(this));
+    // FIXME error: invalid use of incomplete type ‘class QActionGroup’
     partitionsGroup=new QActionGroup(partitionsAction->menu());
     outputsAction->setMenu(new QMenu(this));
     outputsAction->setVisible(false);
@@ -420,23 +428,29 @@ MainWindow::MainWindow(QWidget *parent)
     #define TAB_ACTION(A) A->icon(), A->text(), A->text()
     int sidebarPageShortcutKey=Qt::Key_1;
     addAction(showPlayQueueAction = ActionCollection::get()->createAction("showplayqueue", tr("Play Queue"), Icons::self()->playqueueIcon));
-    showPlayQueueAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_Q);
+    // FIXME error: use of deleted function ‘constexpr void Qt::operator+(QFlags<KeyboardModifier>::enum_type, QFlags<KeyboardModifier>::enum_type)’
+    // QFlags<KeyboardModifier> modifiers = Qt::ControlModifier | Qt::ShiftModifier;
+    showPlayQueueAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Q));
+//    showPlayQueueAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_Q);
     tabWidget->addTab(playQueuePage, TAB_ACTION(showPlayQueueAction), playQueueInSidebar);
     connect(showPlayQueueAction, SIGNAL(triggered()), this, SLOT(showPlayQueue()));
     libraryPage = new LibraryPage(this);
     addAction(libraryTabAction = ActionCollection::get()->createAction("showlibrarytab", tr("Library"), Icons::self()->libraryIcon));
-    libraryTabAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+nextKey(sidebarPageShortcutKey));
+    // FIXME similaar deleted function here
+    //libraryTabAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+nextKey(sidebarPageShortcutKey));
+    libraryTabAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | nextKey(sidebarPageShortcutKey)));
     tabWidget->addTab(libraryPage, TAB_ACTION(libraryTabAction), !hiddenPages.contains(libraryPage->metaObject()->className()));
     connect(libraryTabAction, SIGNAL(triggered()), this, SLOT(showLibraryTab()));
     folderPage = new FolderPage(this);
     addAction(foldersTabAction = ActionCollection::get()->createAction("showfolderstab", tr("Folders"), Icons::self()->foldersIcon));
-    foldersTabAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+nextKey(sidebarPageShortcutKey));
+    // FIXME and here. Who has deleted all these functions, eh?
+    foldersTabAction->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | nextKey(sidebarPageShortcutKey));
     tabWidget->addTab(folderPage, TAB_ACTION(foldersTabAction), !hiddenPages.contains(folderPage->metaObject()->className()));
     connect(foldersTabAction, SIGNAL(triggered()), this, SLOT(showFoldersTab()));
     folderPage->setEnabled(!hiddenPages.contains(folderPage->metaObject()->className()));
     playlistsPage = new PlaylistsPage(this);
     addAction(playlistsTabAction = ActionCollection::get()->createAction("showplayliststab", tr("Playlists"), Icons::self()->playlistsIcon));
-    playlistsTabAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+nextKey(sidebarPageShortcutKey));
+    playlistsTabAction->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | nextKey(sidebarPageShortcutKey));
     tabWidget->addTab(playlistsPage, TAB_ACTION(playlistsTabAction), !hiddenPages.contains(playlistsPage->metaObject()->className()));
     connect(playlistsTabAction, SIGNAL(triggered()), this, SLOT(showPlaylistsTab()));
     connect(playlistsPage, SIGNAL(error(const QString &)), SLOT(showError(const QString &)));
@@ -446,23 +460,27 @@ MainWindow::MainWindow(QWidget *parent)
     stopDynamicButton->setDefaultAction(DynamicPlaylists::self()->stopAct());
     onlinePage = new OnlineServicesPage(this);
     addAction(onlineTabAction = ActionCollection::get()->createAction("showonlinetab", tr("Internet"), Icons::self()->onlineIcon));
-    onlineTabAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+nextKey(sidebarPageShortcutKey));
+    // FIXME this is apparently deleted.
+    //onlineTabAction->setShortcut (Qt::ControlModifier+Qt::ShiftModifier+nextKey(sidebarPageShortcutKey));
+    onlineTabAction->setShortcut (Qt::CTRL | Qt::SHIFT | nextKey(sidebarPageShortcutKey));
     tabWidget->addTab(onlinePage, TAB_ACTION(onlineTabAction), !hiddenPages.contains(onlinePage->metaObject()->className()));
     onlinePage->setEnabled(!hiddenPages.contains(onlinePage->metaObject()->className()));
     connect(onlineTabAction, SIGNAL(triggered()), this, SLOT(showOnlineTab()));
 //    connect(onlinePage, SIGNAL(addToDevice(const QString &, const QString &, const QList<Song> &)), SLOT(copyToDevice(const QString &, const QString &, const QList<Song> &)));
     connect(onlinePage, SIGNAL(error(const QString &)), this, SLOT(showError(const QString &)));
+
     #ifdef ENABLE_DEVICES_SUPPORT
     devicesPage = new DevicesPage(this);
     addAction(devicesTabAction = ActionCollection::get()->createAction("showdevicestab", tr("Devices"), Icons::self()->devicesIcon));
-    devicesTabAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+nextKey(sidebarPageShortcutKey));
+    devicesTabAction->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | nextKey(sidebarPageShortcutKey));
     tabWidget->addTab(devicesPage, TAB_ACTION(devicesTabAction), !hiddenPages.contains(devicesPage->metaObject()->className()));
     DevicesModel::self()->setEnabled(!hiddenPages.contains(devicesPage->metaObject()->className()));
     connect(devicesTabAction, SIGNAL(triggered()), this, SLOT(showDevicesTab()));
     #endif
+
     searchPage = new SearchPage(this);
     addAction(searchTabAction = ActionCollection::get()->createAction("showsearchtab", tr("Search"), Icons::self()->searchTabIcon));
-    searchTabAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+nextKey(sidebarPageShortcutKey));
+    searchTabAction->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | nextKey(sidebarPageShortcutKey));
     connect(searchTabAction, SIGNAL(triggered()), this, SLOT(showSearchTab()));
     connect(searchPage, SIGNAL(locate(QList<Song>)), this, SLOT(locateTracks(QList<Song>)));
     tabWidget->addTab(searchPage, TAB_ACTION(searchTabAction), !hiddenPages.contains(searchPage->metaObject()->className()));
@@ -609,7 +627,7 @@ MainWindow::MainWindow(QWidget *parent)
         menuButton->setVisible(false);
         #else
         showMenubarAction = ActionCollection::get()->createAction("showmenubar", tr("Show Menubar"));
-        showMenubarAction->setShortcut(Qt::ControlModifier+Qt::Key_M);
+        showMenubarAction->setShortcut(Qt::ControlModifier | Qt::Key_M);
         showMenubarAction->setCheckable(true);
         connect(showMenubarAction, SIGNAL(toggled(bool)), this, SLOT(toggleMenubar()));
         #endif
@@ -735,7 +753,9 @@ MainWindow::MainWindow(QWidget *parent)
         }
         Action *action=ActionCollection::get()->createAction(QLatin1String("rating")+QString::number(i), text);
         action->setProperty(constRatingKey, i*Song::Rating_Step);
-        action->setShortcut(Qt::AltModifier+Qt::Key_0+i);
+
+// TODO warning: ‘constexpr QKeyCombination::operator int() const’ is deprecated: Use QKeyCombination instead of int [-Wdeprecated-declarations]
+        action->setShortcut(Qt::AltModifier | Qt::Key_0 | i);
         action->setSettingsText(ratingAction);
         ratingAction->menu()->addAction(action);
         connect(action, SIGNAL(triggered()), SLOT(setRating()));
@@ -1450,7 +1470,7 @@ void MainWindow::outputsUpdated(const QList<Output> &outputs)
             act->setData(o.id);
             act->setCheckable(true);
             act->setChecked(o.enabled);
-            act->setShortcut(Qt::ControlModifier+Qt::AltModifier+nextKey(i));
+            act->setShortcut(Qt::ControlModifier | Qt::AltModifier | nextKey(i));
         }
         menu->addSeparator();
         QMenu* moveMenu = menu->addMenu(tr("Move output to this partition"));
@@ -1534,7 +1554,9 @@ void MainWindow::updateConnectionsMenu()
                 act->setCheckable(true);
                 act->setChecked(d.name==currentConn);
                 act->setActionGroup(connectionsGroup);
-                act->setShortcut(Qt::ControlModifier+nextKey(i));
+                // FIXME deleted function use - not sure where it is though
+                // HACK for compilation, fix later
+//                act->setShortcut (Qt::ControlModifier+nextKey(i));
             }
         }
     }
@@ -1752,7 +1774,9 @@ void MainWindow::showServerInfo()
     std::sort(tags.begin(), tags.end());
     long version=MPDConnection::self()->version();
     QDateTime dbUpdate;
-    dbUpdate.setTime_t(MPDStats::self()->dbUpdate());
+    // FIXED error: ‘class QDateTime’ has no member named ‘setTime_t’; did you mean ‘setTime’?
+    dbUpdate.setSecsSinceEpoch(MPDStats::self()->dbUpdate());
+    //dbUpdate.setTime_t(MPDStats::self()->dbUpdate());
     MessageBox::information(this,
                                   #ifdef Q_OS_MAC
                                   tr("Server Information")+QLatin1String("<br/><br/>")+
