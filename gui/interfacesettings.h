@@ -26,7 +26,7 @@
 
 #include "ui_interfacesettings.h"
 
-class QStringList;
+//class QStringList;
 
 class InterfaceSettings : public QWidget, private Ui::InterfaceSettings
 {

@@ -44,7 +44,7 @@
 #endif
 #include "apikeyssettings.h"
 #include "support/monoicon.h"
-#include <QDesktopWidget>
+//#include <QScreen>
 #include <QTimer>
 
 static int iCount=0;

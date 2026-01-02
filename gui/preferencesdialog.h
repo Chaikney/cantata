@@ -36,14 +36,14 @@ class ContextSettings;
 struct MPDConnectionDetails;
 class CacheSettings;
 #if defined CDDB_FOUND || defined MUSICBRAINZ5_FOUND
-class AudioCdSettings;
+ class AudioCdSettings;
 #endif
-class QStringList;
+//class QStringList;
 #ifdef ENABLE_PROXY_CONFIG
-class ProxySettings;
+ class ProxySettings;
 #endif
 #ifdef ENABLE_SCROBBLING
-class ScrobblingSettings;
+ class ScrobblingSettings;
 #endif
 class CustomActionsSettings;
 class ApiKeysSettings;
