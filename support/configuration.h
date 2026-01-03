@@ -51,6 +51,7 @@ public:
     void         set(const QString &key, const QString &val)     { if (!hasEntry(key) || get(key, val)!=val) setValue(key, val); }
     void         set(const QString &key, const char *val)        { if (!hasEntry(key) || get(key, QLatin1String(val))!=QLatin1String(val)) setValue(key, val); }
     void         set(const QString &key, const QStringList &val) { if (!hasEntry(key) || get(key, val)!=val) setValue(key, val); }
+        // HACK These are ambiguous in one call but identical Add QSizetype?
     void         set(const QString &key, bool val)               { if (!hasEntry(key) || get(key, val)!=val) setValue(key, val); }
     void         set(const QString &key, int val)                { if (!hasEntry(key) || get(key, val)!=val) setValue(key, val); }
     void         set(const QString &key, unsigned int val)       { if (!hasEntry(key) || get(key, val)!=val) setValue(key, val); }
