@@ -142,7 +142,7 @@ MultiPageWidget::MultiPageWidget(QWidget *p)
     scroll->setProperty(ProxyStyle::constModifyFrameProp, ProxyStyle::VF_Side|ProxyStyle::VF_Top);
     mainPage->setLayout(mainLayout);
     mainLayout->addWidget(scroll);
-    mainLayout->setMargin(0);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(0);
     mainLayout->addWidget(infoLabel);
     infoLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);

@@ -218,7 +218,7 @@ MainWindow::MainWindow(QWidget *parent)
     topToolBar->setContentsMargins(0, 0, 0, 0);
     QLayout *l=topToolBar->layout();
     if (l) {
-        l->setMargin(0);
+        l->setContentsMargins(0, 0, 0, 0);
         l->setSpacing(0);
     }
     topToolBar->ensurePolished();
