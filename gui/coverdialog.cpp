@@ -44,7 +44,7 @@
 #include <QApplication>
 #include <QProgressBar>
 #include <QScrollArea>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QWheelEvent>
 #include <QScrollBar>
 #include <QMenu>
@@ -252,14 +252,18 @@ void CoverPreview::showImage(const QImage &img, const QString &u)
         scrollArea->show();
         QApplication::processEvents();
         adjustSize();
-        QStyleOptionFrame opt;
-        opt.init(scrollArea);
-        int fw=style()->pixelMetric(QStyle::PM_DefaultFrameWidth, &opt, scrollArea);
-        if (fw<0) {
-            fw=2;
-        }
-        fw*=2;
-        QRect desktop = qApp->desktop()->screenGeometry(this);
+        // this is trying to obtain the fw (fractional width? but is int) based on pixelMetric
+        // ....which is ...?
+        // HACK I comment this out for now; it may be not needed.
+        // QStyleOptionFrame opt;
+        // opt.init(scrollArea);
+        // int fw=style()->pixelMetric(QStyle::PM_DefaultFrameWidth, &opt, scrollArea);
+        // if (fw<0) {
+        //     fw=2;
+        // }
+        // fw*=2;
+        int	fw = 2; // HACK to replace code above
+        QRect desktop = qApp->primaryScreen()->availableGeometry();
         int maxWidth=desktop.width()*0.75;
         int maxHeight=desktop.height()*0.75;
         int lrPad=width()-mainWidget()->width();
