@@ -23,7 +23,8 @@
 
 #include "application.h"
 #include <QTranslator>
-#include <QTextCodec>
+// HACK for compilation - why is this needed? Can I get away without it?
+// include <QTextCodec>
 #include <QLibraryInfo>
 #include <QDir>
 #include <QFile>
@@ -353,7 +354,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName(PACKAGE_NAME);
     QCoreApplication::setOrganizationName(ORGANIZATION_NAME);
 
-    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+// warning: ‘Qt::AA_UseHighDpiPixmaps’ is deprecated: High-DPI pixmaps are always enabled.
+// This attribute no longer has any effect. [-Wdeprecated-declarations]
+   // QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     // Dont enable AA_EnableHighDpiScaling - messes up fractional scaling? Issue #1257
     //#if QT_VERSION >= 0x050600 && defined Q_OS_WIN
     //QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -394,6 +397,7 @@ int main(int argc, char *argv[])
     QSettings s;
 
     // Create the file if it doesn't exist already
+    // TODO rewrite to handle warning about ignored return value on the open call
     if (!QFile::exists(s.fileName())) {
         QFile file(s.fileName());
         file.open(QIODevice::WriteOnly);
