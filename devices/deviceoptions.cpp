@@ -340,7 +340,7 @@ QString DeviceOptions::clean(const QString &str) const
 
     result=result.simplified();
     if (replaceSpaces) {
-        result.replace(QRegExp("\\s"), "_");
+        result.replace(QRegularExpression("\\s"), "_");
     }
     if (vfatSafe) {
         result = vfatPath(result);
@@ -386,7 +386,7 @@ QString DeviceOptions::createFilename(const Song &s) const
         path.replace(i, QLatin1String(""));
     }
     if (replaceSpaces) {
-        path.replace(QRegExp("\\s"), "_");
+        path.replace(QRegularExpression("\\s"), "_");
     }
 
     Song copy=clean(s);

@@ -22,13 +22,14 @@
  */
 
 #ifndef DEVICE_OPTIONS_H
-#define DEVICE_OPTIONS_H
+# define DEVICE_OPTIONS_H
 
-#include <QString>
-#include "config.h"
-#ifdef ENABLE_DEVICES_SUPPORT
-#include "encoders.h"
-#endif
+# include <QString>
+# include "config.h"
+# include <QRegularExpression>
+# ifdef ENABLE_DEVICES_SUPPORT
+#  include "encoders.h"
+# endif
 
 struct Song;
 
