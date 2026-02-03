@@ -26,10 +26,9 @@
 #include <QLabel>
 #include <QTimer>
 #include <QPixmap>
-#include <QMatrix>
 
 // Borrowed from kolourpaint...
-static QTransform transformWithZeroOrigin(const QMatrix &matrix, int width, int height)
+static QTransform transformWithZeroOrigin(const QTransform &matrix, int width, int height)
 {
     QRect newRect(matrix.mapRect(QRect(0, 0, width, height)));
 
@@ -37,11 +36,17 @@ static QTransform transformWithZeroOrigin(const QMatrix &matrix, int width, int 
                    matrix.dx() - newRect.left(), matrix.dy() - newRect.top());
 }
 
+// HACK Copilot conversion, is the qreal logic needed in this usage?
 static QTransform rotateMatrix(int width, int height, double angle)
 {
-    QMatrix matrix;
-    matrix.translate(width/2, height/2);
-    matrix.rotate(angle);
+    // Use qreal (Qt floating type) to avoid integer division and keep precision.
+    qreal cx = width  / 2.0;
+    qreal cy = height / 2.0;
+
+    // QTransform is the Qt6 class for affine 2D transforms (a 3x3 matrix under the hood).
+    QTransform matrix;
+    matrix.translate(cx, cy);   // move origin to center
+    matrix.rotate(angle);       // rotate around that origin (angle in degrees)
 
     return transformWithZeroOrigin(matrix, width, height);
 }
