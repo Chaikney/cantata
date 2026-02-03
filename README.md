@@ -1,42 +1,20 @@
-Cantata
-=======
+Cantata qt6 version
+===================
 
-**NOTE** This is an education-only fork of one of the programs I (Chaikney) use the most. Do not try and use any of the code I add here! Everything after this is from CDrummond's notes. If you found the project useful, the Paypal link below still seems to work.
+**NOTE** **Development is taking place in the "qt6_port" branch.**
 
+# What is Cantata?
 
-**NOTE** After 10 years, development of Cantata has now ceased, and this repository is read-only. v2.5.0 is the last released version.
+Cantata is the program that I use on my laptop to play music through my Hi-Fi (via the raspberry Pi and hard drive connected to the amplifier).
 
-![ScreenShot](screenshots/mainwindow.png)
+In more technical language, Cantata is a program to control an MPD (Music Player Daemon) instance. It is the piece that you use to tell the music player *what* you want to listen to. That implies a bunch of features to make it friendly, attractive and useable - displaying cover art, searching (for songs, artists, albums, etc), and queuing tracks.
 
+# What is this, specifically?
 
-A graphical (Qt5) client for MPD, supporting the following features:
+This is a friendly fork of a program that I have used for many years. The original author has archived the code and ceased development, and I am motivated to carry on being able to use the program for years to come. (My Hi-fi is [ahem] years old and I believe that the software part should keep running as long as the hardware does.)
 
-  1. Supports Linux, macOS, Windows, and Haiku. **NOTE:** Only Linux actively supported as of 2.3.3
-  2. Multiple MPD collections.
-  3. Highly customisable layout.
-  4. Songs (optionally) grouped by album in play queue.
-  5. Context view to show artist, album, and song information of current track.
-  6. Simple tag editor.
-  7. File organizer - use tags to organize files and folders.
-  8. Ability to calculate ReplyGain tags. (Linux only, and if relevant libraries installed)
-  9. Dynamic playlists.
- 10. Smart Playlists.
- 11. Online services; Jamendo, Magnatune, SoundCloud, and Podcasts.
- 12. Radio stream support - with the ability to search for streams via TuneIn, ShoutCast, or Dirble.
- 13. USB-Mass-Storage and MTP device support. (Linux only, and if relevant libraries installed)
- 14. Audio CD ripping and playback. (Linux only, and if relevant libraries installed)
- 15. Playback of non-MPD songs - via simple in-built HTTP server.
- 16. MPRISv2 DBUS interface.
- 17. Ratings support.
- 18. "Partitions" support.
+The [original README document](./README_OLD.md) gives some of the history and features of the project.
 
-Cantata started off as a fork of QtMPC, however, the code (and user interface) is now *very* different to that of QtMPC.
-For more detailed information, please refer to the main [README](https://raw.githubusercontent.com/CDrummond/cantata/master/README)
+Another part of the motivation for this project is that I have been learning C++ programming and since the toolkit for the program has a new version (this is Qt5 and Qt6 now exists), it needs someone to step up and do the work updating it if it is not to fall into disuse.
 
-
-## Donations
-
-I develop Cantata purely for fun, so no donations are required. However, seeing as I have been asked about this a few times, here is a link...
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2X2CTDUH27V9L&source=url)
-
+I don't know for sure I can do the work, but I have made decent progress so far. I am first to have a version that compiles against qt6 (and after that, one that runs ;) ). When that is achieved, I will look to simplify the codebase - some features are obsolete and some don't interest me enough to keep maintaining them. Then, I have some ideas of things that I'd like to improve or tweak, but that is for the future.
