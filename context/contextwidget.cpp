@@ -295,7 +295,9 @@ void ContextWidget::setWide(bool w)
         }
         QHBoxLayout *l=new QHBoxLayout(standardContext);
         standardContext->setLayout(l);
-        int m=l->margin()/2;
+        // NOTE What is m? Used for the SPacerItem below. There (now?) exists a setSpacing method that might be better...
+        // HACK int m=l->contentsMargins()/2;
+        int m=9;
         l->setContentsMargins(0, 0, 0, 0);
         if (stack) {
             stack->setVisible(false);
@@ -336,7 +338,8 @@ void ContextWidget::setWide(bool w)
         }
         QGridLayout *l=new QGridLayout(standardContext);
         standardContext->setLayout(l);
-        int m=l->margin()/2;
+        int m=9;
+        // HACK int m=l->margin()/2;
         l->setContentsMargins(0, 0, 0, 0);
         l->setSpacing(0);
         if (!stack) {
@@ -623,7 +626,8 @@ void ContextWidget::update(const Song &s)
         if (!onlineContext) {
             QWidget *onlinePage=new QWidget(mainStack);
             QHBoxLayout *onlineLayout=new QHBoxLayout(onlinePage);
-            int m=onlineLayout->margin()/2;
+            int m=9;
+            // HACK int m=onlineLayout->margin()/2;
             onlineLayout->setContentsMargins(0, 0, 0, 0);
             onlineLayout->addItem(new QSpacerItem(m, m, QSizePolicy::Fixed, QSizePolicy::Fixed));
             onlineContext=new OnlineView(onlinePage);

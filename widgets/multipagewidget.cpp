@@ -79,8 +79,14 @@ public:
         setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
         mainText->setText(t);
         subText->setText(s);
-        layout->setMargin(qMin(layout->margin(), 8));
-        setMinimumHeight(qMax(textSize, size)+(layout->margin()*2));
+// FIXME  ‘class QGridLayout’ has no member named ‘setMargin’
+// "make the margins either 8 or the existing value, choose the smallest"
+// HACK There is no way that this is the optimal way to do what is wanted here...
+        int	ch_min_hack = qMin(qMin(layout->contentsMargins().bottom(), layout->contentsMargins().top()), qMin(layout->contentsMargins().right(), layout->contentsMargins().left()));
+        ch_min_hack = qMin(ch_min_hack, 8);
+//        layout->setContentsMargins(qMin(layout->contentsMargins().bottom(), 8));
+        layout->setContentsMargins(ch_min_hack, ch_min_hack, ch_min_hack, ch_min_hack);
+        setMinimumHeight(qMax(textSize, size)+(layout->contentsMargins().top()*2));
         updateToolTip();
         setFocusPolicy(Qt::TabFocus);
     }
@@ -149,7 +155,12 @@ MultiPageWidget::MultiPageWidget(QWidget *p)
     mainLayout->addWidget(sizer);
     layout->setSpacing(0);
     layout->setSizeConstraint(QLayout::SetMinimumSize);
-    layout->setMargin(qMin(layout->margin(), 4));
+    // FIXME template function doesnt match
+    int	ch_min_hack = qMin(qMin(layout->contentsMargins().bottom(), layout->contentsMargins().top()), qMin(layout->contentsMargins().right(), layout->contentsMargins().left()));
+    ch_min_hack = qMin(ch_min_hack, 4);
+//        layout->setContentsMargins(qMin(layout->contentsMargins().bottom(), 8));
+        layout->setContentsMargins(ch_min_hack, ch_min_hack, ch_min_hack, ch_min_hack);
+// layout->setContentsMargins(qMin(layout->contentsMargins(), 4));
     #ifdef Q_OS_MAC
     // TODO: This feels a bt of a hack...
     mainPage->setContentsMargins(-3, 0, -3, 0);
