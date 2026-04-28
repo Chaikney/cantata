@@ -23,7 +23,8 @@
 
 #include "ultimatelyricsprovider.h"
 #include "network/networkaccessmanager.h"
-#include <QTextCodec>
+// FIXME this file not found
+#include <QtCore/QTextCodec>
 #include <QXmlStreamReader>
 #include <QUrl>
 #include <QUrlQuery>
