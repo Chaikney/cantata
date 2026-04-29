@@ -26,11 +26,12 @@
 #include "mpd-interface/mpdconnection.h"
 #include "mpd-interface/mpdparseutils.h"
 #include "models/streamsmodel.h"
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QUrl>
 #include <QXmlStreamReader>
 #include <QJsonParseError>
 #include <QJsonDocument>
+#include <QStringList>
 
 #ifdef _MSC_VER 
 #define strncasecmp _strnicmp
@@ -75,7 +76,7 @@ static QString parsePlaylist(const QByteArray &data, const QString &key, const Q
 
 static QString parseExt3Mu(const QByteArray &data, const QSet<QString> &handlers)
 {
-    QStringList lines=QString(data).split(QRegExp(QLatin1String("(\r\n|\n|\r)")), CANTATA_SKIP_EMPTY);
+    QStringList lines=QString(data).split(QRegularExpression(QLatin1String("(\r\n|\n|\r)")), CANTATA_SKIP_EMPTY);
 
     for (QString line: lines) {
         for (const QString &handler: handlers) {
@@ -93,7 +94,7 @@ static QString parseExt3Mu(const QByteArray &data, const QSet<QString> &handlers
 
 static QString parseAsx(const QByteArray &data, const QSet<QString> &handlers)
 {
-    QStringList lines=QString(data).split(QRegExp(QLatin1String("(\r\n|\n|\r|/>)")), CANTATA_SKIP_EMPTY);
+    QStringList lines=QString(data).split(QRegularExpression(QLatin1String("(\r\n|\n|\r|/>)")), CANTATA_SKIP_EMPTY);
 
     for (QString line: lines) {
         int ref=line.indexOf(QLatin1String("<ref href"), Qt::CaseInsensitive);
@@ -179,7 +180,7 @@ static QString parse(const QByteArray &data, const QString &host)
         for (const auto &h: handlers) {
             DBUG << h;
             if (data.startsWith(h.toLatin1()+"://")) {
-                QStringList lines=QString(data).split(QRegExp(QLatin1String("(\r\n|\n|\r)")), CANTATA_SKIP_EMPTY);
+                QStringList lines=QString(data).split(QRegularExpression(QLatin1String("(\r\n|\n|\r)")), CANTATA_SKIP_EMPTY);
                 if (!lines.isEmpty()) {
                     DBUG << h;
                     return lines.first();
@@ -291,6 +292,7 @@ void StreamFetcher::dataReady()
 
     data+=job->readAll();
 
+    // TODO Deprecation warning here  ‘qsizetype QByteArray::count() const’ is deprecated: Use size() or length() instead. [-Wdeprecated-declarations]
     if (data.count()>constMaxData) {
         NetworkJob *thisJob=job;
         jobFinished(thisJob);
