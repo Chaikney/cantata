@@ -379,7 +379,8 @@ QVariant PlaylistsModel::data(const QModelIndex &index, int role) const
         case Cantata::Role_SongWithRating:
         case Cantata::Role_Song: {
             QVariant var;
-            var.setValue<Song>(*s);
+            var = QVariant::fromValue(*s);
+//            var.setValue<Song>(*s);
             return var;
         }
         case Cantata::Role_AlbumDuration: {

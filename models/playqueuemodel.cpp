@@ -441,8 +441,11 @@ PlayQueueModel::PlayQueueModel(QObject *parent)
     removeDuplicatesAction->setEnabled(false);
     QColor col=Utils::monoIconColor();
     undoAction=ActionCollection::get()->createAction("playqueue-undo", tr("Undo"), MonoIcon::icon(FontAwesome::undo, col));
+    // TODO Deprecation warning here
     undoAction->setShortcut(Qt::ControlModifier+Qt::Key_Z);
     redoAction=ActionCollection::get()->createAction("playqueue-redo", tr("Redo"), MonoIcon::icon(FontAwesome::repeat, col));
+    // FIXME  use of deleted function ‘constexpr void Qt::operator+(QFlags<KeyboardModifier>::enum_type, QFlags<KeyboardModifier>::enum_type)’
+  446 |     redoAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_Z);
     redoAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_Z);
     connect(undoAction, SIGNAL(triggered()), this, SLOT(undo()));
     connect(redoAction, SIGNAL(triggered()), this, SLOT(redo()));
@@ -609,7 +612,8 @@ QVariant PlayQueueModel::data(const QModelIndex &index, int role) const
             emit getRating(s.file);
             s.rating=Song::Rating_Requested;
         }
-        var.setValue<Song>(s);
+//        var.setValue<Song>(s);
+        var = QVariant::fromValue(s);
         return var;
     }
     case Cantata::Role_AlbumDuration: {
