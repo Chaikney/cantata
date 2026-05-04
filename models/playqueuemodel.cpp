@@ -444,9 +444,8 @@ PlayQueueModel::PlayQueueModel(QObject *parent)
     // TODO Deprecation warning here
     undoAction->setShortcut(Qt::ControlModifier+Qt::Key_Z);
     redoAction=ActionCollection::get()->createAction("playqueue-redo", tr("Redo"), MonoIcon::icon(FontAwesome::repeat, col));
-    // FIXME  use of deleted function ‘constexpr void Qt::operator+(QFlags<KeyboardModifier>::enum_type, QFlags<KeyboardModifier>::enum_type)’
-  446 |     redoAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_Z);
-    redoAction->setShortcut(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_Z);
+    // FIXED  use of deleted function ‘constexpr void Qt::operator+(QFlags<KeyboardModifier>::enum_type, QFlags<KeyboardModifier>::enum_type)’
+    redoAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Z));
     connect(undoAction, SIGNAL(triggered()), this, SLOT(undo()));
     connect(redoAction, SIGNAL(triggered()), this, SLOT(redo()));
     connect(removeDuplicatesAction, SIGNAL(triggered()), this, SLOT(removeDuplicates()));
