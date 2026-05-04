@@ -645,7 +645,8 @@ QVariant StreamsModel::data(const QModelIndex &index, int role) const
         }
         if (!actions.isEmpty()) {
             QVariant v;
-            v.setValue<QList<Action *> >(actions);
+            v = QVariant::fromValue(QList < Action * >() );
+//            v.setValue<QList<Action *> >(actions);
             return v;
         }
         break;

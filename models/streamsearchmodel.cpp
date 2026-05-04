@@ -147,6 +147,7 @@ QVariant StreamSearchModel::data(const QModelIndex &index, int role) const
         if (item->isCategory()){
             if (static_cast<const StreamsModel::CategoryItem *>(item)->canBookmark) {
                 QVariant v;
+//                v.setValue<QList<Action *> >(QList<Action *>() << StreamsModel::self()->addBookmarkAct());
                 v = QVariant::fromValue(QList<Action * > () << StreamsModel::self()->addBookmarkAct());
                 return v;
             }

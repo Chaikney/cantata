@@ -235,12 +235,14 @@ QVariant SearchModel::data(const QModelIndex &index, int role) const
         return true;
     case Cantata::Role_CoverSong: {
         QVariant v;
-        v.setValue<Song>(*song);
+        v = QVariant::fromValue(*song);
+//        v.setValue<Song>(*song);
         return v;
     }
     case Cantata::Role_Song: {
         QVariant var;
-        var.setValue<Song>(*song);
+        var = QVariant::fromValue(*song);
+//        var.setValue<Song>(*song);
         return var;
     }
     default:
